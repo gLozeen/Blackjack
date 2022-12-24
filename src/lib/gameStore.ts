@@ -28,7 +28,7 @@ const cardCosts: Record<Rank, number> = {
   J: 10,
   Q: 10,
   K: 10,
-  A: 11,
+  A: 1,
 };
 
 export class GameStore {
@@ -108,6 +108,17 @@ export class GameStore {
   }
 
   gameEnd(dealerCards: Card[], playerCards: Card[]) {
+    if (this.countScore(this.playerHand) > 21) {
+      toast("You lose!", {
+        icon: "❌",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      return;
+    }
     const difference =
       this.countScore(dealerCards) - this.countScore(playerCards);
     if (difference > 0) {
@@ -141,18 +152,21 @@ export class GameStore {
   }
 
   countScore = (cards: Card[]) => {
-    return cards.reduce<number>((sum, current) => {
+    let count = cards.reduce<number>((sum, current) => {
       sum += cardCosts[current.rank];
       return sum;
     }, 0);
+    if (count < 12 && cards.find((current) => current.rank === "A")) {
+      count += 10;
+    }
+    return count;
   };
-
+  // "8","2","2","A"
   shouldTakeCard = () => this.countScore(this.dealerHand) < 17;
   constructor() {
     makeAutoObservable(this);
   }
 }
-
 export const getDisplaySuit = (suit: Suit): string => {
   switch (suit) {
     case "spades":
