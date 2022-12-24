@@ -1,3 +1,6 @@
+* {
+  box-sizing: border-box;
+}
 html {
   height: 100%;
 }
@@ -75,9 +78,20 @@ body {
   font-size: 14px;
   line-height: 15px;
 }
+.dealer-hand {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  justify-content: center;
+  width: 40%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-flow: row wrap;
+  gap: 5px;
+}
 .hand {
   position: absolute;
-  bottom: 20px;
+  bottom: 24px;
   left: 50%;
   transform: translate(-50%, 0);
   display: flex;
