@@ -20,42 +20,44 @@ const App = observer(() => {
     gameStore.changeState();
   }, []);
   return (
-    <div className="table-wrapper">
-      <div className="table">
-        <div className="inner-table">
-          <div className="dealer-hand">
-            {gameStore.dealerHand.map((card, cardIndex) =>
-              cardIndex ||
-              gameStore.state === GameState.DealerTurn ||
-              gameStore.state === GameState.Bet ? (
+    <>
+      <Buttons>
+        <HitButton
+          onClick={() => gameStore.onHit()}
+          disabled={gameStore.state !== GameState.PlayerTurn}
+        />
+        <BetButton onClick={() => gameStore.onBet()} />
+        <StandButton
+          onClick={() => gameStore.onStand()}
+          disabled={gameStore.state !== GameState.PlayerTurn}
+        />
+        {/* <SurrenderButton onClick={() => gameStore.onSurrender()} /> */}
+      </Buttons>
+      <div className="table-wrapper">
+        <div className="table">
+          <div className="inner-table">
+            <div className="dealer-hand">
+              {gameStore.dealerHand.map((card, cardIndex) =>
+                cardIndex ||
+                gameStore.state === GameState.DealerTurn ||
+                gameStore.state === GameState.Bet ? (
+                  <CardComponent card={card} key={`card${cardIndex}`} />
+                ) : (
+                  <CardFliped key={`card${cardIndex}`} />
+                )
+              )}
+            </div>
+            <div className="hand">
+              {gameStore.playerHand.map((card, cardIndex) => (
                 <CardComponent card={card} key={`card${cardIndex}`} />
-              ) : (
-                <CardFliped key={`card${cardIndex}`} />
-              )
-            )}
+              ))}
+            </div>
+            <EndGameMenu id="egm" />
+            <DealerScore />
           </div>
-          <div className="hand">
-            {gameStore.playerHand.map((card, cardIndex) => (
-              <CardComponent card={card} key={`card${cardIndex}`} />
-            ))}
-          </div>
-          <EndGameMenu id="egm" />
-          <Buttons>
-            <HitButton
-              onClick={() => gameStore.onHit()}
-              disabled={gameStore.state !== GameState.PlayerTurn}
-            />
-            <BetButton onClick={() => gameStore.onBet()} />
-            <StandButton
-              onClick={() => gameStore.onStand()}
-              disabled={gameStore.state !== GameState.PlayerTurn}
-            />
-            {/* <SurrenderButton onClick={() => gameStore.onSurrender()} /> */}
-          </Buttons>
-          <DealerScore />
         </div>
       </div>
-    </div>
+    </>
   );
 });
 const EndGameMenu = styled.div`

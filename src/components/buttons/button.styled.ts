@@ -23,8 +23,9 @@ export const ActionButton = styled.div`
 
 export const Buttons = styled.div`
   position: absolute;
-  bottom: -5%;
-  right: -40%;
+  bottom: 2%;
+  right: 2%;
+  z-index: 100;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 5px;
