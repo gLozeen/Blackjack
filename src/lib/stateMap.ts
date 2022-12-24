@@ -19,7 +19,10 @@ export const stateTransitions: GameStateTransitions = {
     }
   },
   [GameState.EndGame]: () => GameState.Bet,
-  [GameState.Hit]: () => GameState.PlayerTurn,
+  [GameState.Hit]: () =>
+    gameStore.countScore(gameStore.playerHand) < 21
+      ? GameState.PlayerTurn
+      : GameState.EndGame,
   [GameState.Stand]: () => GameState.DealerTurn,
   [GameState.DealerTurn]: () => GameState.EndGame,
 };
