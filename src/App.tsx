@@ -9,18 +9,13 @@ import { BetButton } from "./components/buttons/bet";
 import { HitButton } from "./components/buttons/hit";
 import { StandButton } from "./components/buttons/stand";
 import { SurrenderButton } from "./components/buttons/surrender";
-import { GameState } from "./lib/gameState";
+import { countScore, GameState } from "./lib/gameState";
 import { CardComponent } from "./components/card/cardComponent";
 
 const gameState = new GameState();
 const App = observer(() => {
   React.useEffect(() => {
     gameState.fillDeck();
-    gameState.dealToDealer();
-    gameState.dealToDealer();
-    gameState.dealToDealer();
-    gameState.dealToDealer();
-    gameState.dealToDealer();
     gameState.dealToPlayer();
     gameState.dealToPlayer();
   }, []);
@@ -42,14 +37,17 @@ const App = observer(() => {
             <HitButton />
             <BetButton />
             <StandButton />
-            <SurrenderButton />
+            <SurrenderButton onClick={() => gameState.dealToDealer()} />
           </Buttons>
-          <div className="player-bet">
-            <div className="bet"></div>
-          </div>
+          <DealerScore />
         </div>
       </div>
     </div>
   );
 });
+const DealerScore = observer(() => (
+  <div className="player-bet">
+    <div className="bet">{countScore(gameState.dealerHand)}</div>
+  </div>
+));
 export default App;

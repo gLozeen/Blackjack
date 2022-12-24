@@ -1,8 +1,9 @@
 import { observer } from "mobx-react";
 import { ActionButton } from "./button.styled";
+import { ActionButtonProps } from "./button.types";
 
-export const HitButton = observer(() => (
-  <ActionButton>
+export const HitButton = observer((props: ActionButtonProps) => (
+  <ActionButton {...props}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"

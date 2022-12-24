@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { computed, makeAutoObservable } from "mobx";
 
 const ranks = [2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K", "A"];
 const suits = ["spades", "clubs", "diamonds", "hearts"];
@@ -10,6 +10,22 @@ export interface Card {
 export type Rank = typeof ranks[number];
 
 export type Suit = typeof suits[number];
+
+const cardCosts: Record<Rank, number> = {
+  2: 2,
+  3: 3,
+  4: 4,
+  5: 5,
+  6: 6,
+  7: 7,
+  8: 8,
+  9: 9,
+  10: 10,
+  J: 10,
+  Q: 10,
+  K: 10,
+  A: 11,
+};
 
 export class GameState {
   playerHand: Card[] = [];
@@ -35,7 +51,6 @@ export class GameState {
     console.log(deck);
     console.groupEnd();
     this.deck = deck;
-
   }
 
   dealToPlayer() {
@@ -51,8 +66,13 @@ export class GameState {
   constructor() {
     makeAutoObservable(this);
   }
-
 }
+export const countScore = (cards: Card[]) => {
+  return cards.reduce<number>((sum, current) => {
+    sum += cardCosts[current.rank];
+    return sum;
+  }, 0);
+};
 
 export const getDisplaySuit = (suit: Suit): string => {
   switch (suit) {
