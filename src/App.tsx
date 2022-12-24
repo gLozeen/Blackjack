@@ -9,9 +9,10 @@ import { BetButton } from "./components/buttons/bet";
 import { HitButton } from "./components/buttons/hit";
 import { StandButton } from "./components/buttons/stand";
 import { SurrenderButton } from "./components/buttons/surrender";
-import { countScore, GameStore } from "./lib/gameStore";
+import { GameStore } from "./lib/gameStore";
 import { CardComponent, CardFliped } from "./components/card/cardComponent";
 import { DealerScore } from "./components/dealerScore";
+import { GameState } from "./lib/stateMap.types";
 
 export const gameStore = new GameStore();
 const App = observer(() => {
@@ -24,7 +25,9 @@ const App = observer(() => {
         <div className="inner-table">
           <div className="dealer-hand">
             {gameStore.dealerHand.map((card, cardIndex) =>
-              cardIndex ? (
+              cardIndex ||
+              gameStore.state === GameState.DealerTurn ||
+              gameStore.state === GameState.Bet ? (
                 <CardComponent card={card} key={`card${cardIndex}`} />
               ) : (
                 <CardFliped key={`card${cardIndex}`} />
@@ -36,11 +39,18 @@ const App = observer(() => {
               <CardComponent card={card} key={`card${cardIndex}`} />
             ))}
           </div>
+          <EndGameMenu id="egm" />
           <Buttons>
-            <HitButton onClick={() => gameStore.onHit()} />
+            <HitButton
+              onClick={() => gameStore.onHit()}
+              disabled={gameStore.state !== GameState.PlayerTurn}
+            />
             <BetButton onClick={() => gameStore.onBet()} />
-            <StandButton onClick={() => gameStore.onStand()} />
-            <SurrenderButton onClick={() => gameStore.onSurrender()} />
+            <StandButton
+              onClick={() => gameStore.onStand()}
+              disabled={gameStore.state !== GameState.PlayerTurn}
+            />
+            {/* <SurrenderButton onClick={() => gameStore.onSurrender()} /> */}
           </Buttons>
           <DealerScore />
         </div>
@@ -48,4 +58,11 @@ const App = observer(() => {
     </div>
   );
 });
+const EndGameMenu = styled.div`
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-color: red;
+  display: none;
+`;
 export default App;

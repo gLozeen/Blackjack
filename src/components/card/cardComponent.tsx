@@ -11,6 +11,7 @@ export const CardFliped = styled.div`
   height: 38px;
   background: #22294d;
   border-radius: 5px;
+  animation: append-animate 0.3s linear;
 `;
 export const CardComponent: React.FC<CardComponentProps> = (
   props: CardComponentProps

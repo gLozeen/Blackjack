@@ -1,11 +1,8 @@
 import { computed, makeAutoObservable } from "mobx";
+import toast from "react-hot-toast";
 import { DealerScore } from "../components/dealerScore";
-import {
-  effectsMap,
-  GameState,
-  stateHandlers,
-  stateTransitions,
-} from "./stateMap";
+import { effectsMap, stateHandlers, stateTransitions } from "./stateMap";
+import { ButtonType, GameState, GameStatePayload } from "./stateMap.types";
 
 const ranks = [2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K", "A"];
 const suits = ["spades", "clubs", "diamonds", "hearts"];
@@ -39,7 +36,8 @@ export class GameStore {
   dealerHand: Card[] = [];
   deck: Card[] = [];
   state: GameState = GameState.Bet;
-  changeState(payload?: any): void {
+  changeState<T extends GameState>(payload?: GameStatePayload<T>): void {
+    //@ts-ignore
     const newState = stateTransitions[this.state](payload);
 
     effectsMap
@@ -52,8 +50,12 @@ export class GameStore {
 
     stateHandlers[newState]();
   }
-
+  clearHands() {
+    this.playerHand = [];
+    this.dealerHand = [];
+  }
   fillDeck() {
+    if (this.deck.length) return;
     const deck: Card[] = [];
     suits.forEach((suit) => {
       ranks.forEach((rank) => {
@@ -75,35 +77,81 @@ export class GameStore {
   }
 
   dealToPlayer() {
-    if (this.deck.length === 0) throw new Error();
+    if (this.deck.length === 0) this.fillDeck();
     this.playerHand.push(this.deck.pop()!);
   }
 
   dealToDealer() {
-    if (this.deck.length === 0) throw new Error();
+    if (this.deck.length === 0) this.fillDeck();
     this.dealerHand.push(this.deck.pop()!);
   }
 
   onHit() {
-    this.changeState({ buttonType: "Hit" });
+    if (this.state !== GameState.PlayerTurn) return;
+    this.changeState<GameState.PlayerTurn>({ buttonType: ButtonType.Hit });
   }
 
-  onBet() {}
+  onBet() {
+    if (this.state !== GameState.Bet) return;
+    this.changeState<GameState.Bet>({ betAmount: 1 });
+  }
 
-  onStand() {}
+  onStand() {
+    if (this.state !== GameState.PlayerTurn) return;
+    this.changeState<GameState.PlayerTurn>({ buttonType: ButtonType.Stand });
+  }
 
-  onSurrender() {}
+  onSurrender() {
+    this.changeState<GameState.PlayerTurn>({
+      buttonType: ButtonType.Surrender,
+    });
+  }
+
+  gameEnd(dealerCards: Card[], playerCards: Card[]) {
+    const difference =
+      this.countScore(dealerCards) - this.countScore(playerCards);
+    if (difference > 0) {
+      toast("You lose!", {
+        icon: "❌",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    } else if (difference < 0) {
+      toast("You won!", {
+        icon: "💲",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    } else {
+      toast("DRAW!", {
+        icon: "💞",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    }
+  }
+
+  countScore = (cards: Card[]) => {
+    return cards.reduce<number>((sum, current) => {
+      sum += cardCosts[current.rank];
+      return sum;
+    }, 0);
+  };
+
+  shouldTakeCard = () => this.countScore(this.dealerHand) < 17;
   constructor() {
     makeAutoObservable(this);
   }
 }
-
-export const countScore = (cards: Card[]) => {
-  return cards.reduce<number>((sum, current) => {
-    sum += cardCosts[current.rank];
-    return sum;
-  }, 0);
-};
 
 export const getDisplaySuit = (suit: Suit): string => {
   switch (suit) {

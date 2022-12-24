@@ -1,56 +1,69 @@
-import { toJS } from "mobx";
 import { gameStore } from "../App";
 
-let callBackIds = [];
-export enum GameState {
-  Bet = "bet",
-  Setup = "setup",
-  PlayTime = "playTime",
-  EndGame = "endGame",
-}
+import {
+  ButtonType,
+  GameState,
+  GameStateEffect,
+  GameStateHandlers,
+  GameStateTransitions,
+} from "./stateMap.types";
 
-type GameStateTransition = Record<GameState, (payload?: any) => GameState>;
-
-export const stateTransitions: GameStateTransition = {
+export const stateTransitions: GameStateTransitions = {
   [GameState.Bet]: () => GameState.Setup,
-  [GameState.Setup]: () => GameState.PlayTime,
-  [GameState.PlayTime]: (payload: { buttonType: string }) => {
-    if (payload.buttonType === "Hit") {
-      return GameState.PlayTime;
+  [GameState.Setup]: () => GameState.PlayerTurn,
+  [GameState.PlayerTurn]: (payload) => {
+    if (payload?.buttonType === ButtonType.Hit) {
+      return GameState.Hit;
     } else {
-      return GameState.EndGame;
+      return GameState.Stand;
     }
   },
-  [GameState.EndGame]: function (): GameState {
-    throw new Error("Function not implemented.");
-  },
-};
-
-type GameStateEffect = {
-  from: GameState[];
-  to: GameState[];
-  effects: (() => void)[];
+  [GameState.EndGame]: () => GameState.Bet,
+  [GameState.Hit]: () => GameState.PlayerTurn,
+  [GameState.Stand]: () => GameState.DealerTurn,
+  [GameState.DealerTurn]: () => GameState.EndGame,
 };
 
 export const effectsMap: GameStateEffect[] = [];
 
-type GameStateHandler = Record<GameState, (payload?: any) => void>;
-
-export const stateHandlers: GameStateHandler = {
-  [GameState.Bet]: () => {
-    gameStore.changeState();
-  },
+export const stateHandlers: GameStateHandlers = {
+  [GameState.Bet]: () => {},
   [GameState.Setup]: () => {
+    gameStore.clearHands();
     gameStore.fillDeck();
     gameStore.dealToDealer();
     gameStore.dealToDealer();
     gameStore.dealToPlayer();
     gameStore.dealToPlayer();
+    gameStore.changeState();
   },
-  [GameState.PlayTime]: () => {
-    gameStore.dealToPlayer();
-  },
+  [GameState.PlayerTurn]: () => {},
   [GameState.EndGame]: () => {
-    throw new Error("Function not implemented.");
+    gameStore.gameEnd(gameStore.dealerHand, gameStore.playerHand);
+    gameStore.changeState();
+  },
+  [GameState.Hit]: () => {
+    gameStore.dealToPlayer();
+    gameStore.changeState();
+  },
+
+  [GameState.Stand]: () => {
+    gameStore.changeState();
+  },
+
+  [GameState.DealerTurn]: () => {
+    if (gameStore.shouldTakeCard()) {
+      setTimeout(() => {
+        gameStore.dealToDealer();
+      }, 500);
+      setTimeout(() => {
+        gameStore.changeState();
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        gameStore.changeState();
+      }, 1000);
+    }
   },
 };
+export { GameState };
