@@ -9,35 +9,38 @@ import { BetButton } from "./components/buttons/bet";
 import { HitButton } from "./components/buttons/hit";
 import { StandButton } from "./components/buttons/stand";
 import { SurrenderButton } from "./components/buttons/surrender";
-import { countScore, GameState } from "./lib/gameState";
-import { CardComponent } from "./components/card/cardComponent";
+import { countScore, GameStore } from "./lib/gameStore";
+import { CardComponent, CardFliped } from "./components/card/cardComponent";
+import { DealerScore } from "./components/dealerScore";
 
-const gameState = new GameState();
+export const gameStore = new GameStore();
 const App = observer(() => {
   React.useEffect(() => {
-    gameState.fillDeck();
-    gameState.dealToPlayer();
-    gameState.dealToPlayer();
+    gameStore.changeState();
   }, []);
   return (
     <div className="table-wrapper">
       <div className="table">
         <div className="inner-table">
           <div className="dealer-hand">
-            {gameState.dealerHand.map((card, cardIndex) => (
-              <CardComponent card={card} key={`card${cardIndex}`} />
-            ))}
+            {gameStore.dealerHand.map((card, cardIndex) =>
+              cardIndex ? (
+                <CardComponent card={card} key={`card${cardIndex}`} />
+              ) : (
+                <CardFliped key={`card${cardIndex}`} />
+              )
+            )}
           </div>
           <div className="hand">
-            {gameState.playerHand.map((card, cardIndex) => (
+            {gameStore.playerHand.map((card, cardIndex) => (
               <CardComponent card={card} key={`card${cardIndex}`} />
             ))}
           </div>
           <Buttons>
-            <HitButton />
-            <BetButton />
-            <StandButton />
-            <SurrenderButton onClick={() => gameState.dealToDealer()} />
+            <HitButton onClick={() => gameStore.onHit()} />
+            <BetButton onClick={() => gameStore.onBet()} />
+            <StandButton onClick={() => gameStore.onStand()} />
+            <SurrenderButton onClick={() => gameStore.onSurrender()} />
           </Buttons>
           <DealerScore />
         </div>
@@ -45,9 +48,4 @@ const App = observer(() => {
     </div>
   );
 });
-const DealerScore = observer(() => (
-  <div className="player-bet">
-    <div className="bet">{countScore(gameState.dealerHand)}</div>
-  </div>
-));
 export default App;

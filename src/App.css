@@ -54,13 +54,6 @@ body {
   background: #464e87;
   border-radius: 5px;
 }
-.card-flipped {
-  position: relative;
-  width: 27px;
-  height: 38px;
-  background: #22294d;
-  border-radius: 5px;
-}
 .suit {
   color: rgb(250, 103, 120);
   position: absolute;

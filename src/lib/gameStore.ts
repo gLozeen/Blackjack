@@ -1,4 +1,11 @@
 import { computed, makeAutoObservable } from "mobx";
+import { DealerScore } from "../components/dealerScore";
+import {
+  effectsMap,
+  GameState,
+  stateHandlers,
+  stateTransitions,
+} from "./stateMap";
 
 const ranks = [2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K", "A"];
 const suits = ["spades", "clubs", "diamonds", "hearts"];
@@ -27,10 +34,24 @@ const cardCosts: Record<Rank, number> = {
   A: 11,
 };
 
-export class GameState {
+export class GameStore {
   playerHand: Card[] = [];
   dealerHand: Card[] = [];
   deck: Card[] = [];
+  state: GameState = GameState.Bet;
+  changeState(): void {
+    const newState = stateTransitions[this.state]();
+
+    effectsMap
+      .filter(
+        (effect) =>
+          effect.from.includes(this.state) && effect.to.includes(newState)
+      )
+      .forEach((map) => map.effects.forEach((effect) => effect()));
+    this.state = newState;
+
+    stateHandlers[newState]();
+  }
 
   fillDeck() {
     const deck: Card[] = [];
@@ -63,6 +84,15 @@ export class GameState {
     this.dealerHand.push(this.deck.pop()!);
   }
 
+  onHit() {
+    this.changeState();
+  }
+
+  onBet() {}
+
+  onStand() {}
+
+  onSurrender() {}
   constructor() {
     makeAutoObservable(this);
   }
