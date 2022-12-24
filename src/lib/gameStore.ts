@@ -39,8 +39,8 @@ export class GameStore {
   dealerHand: Card[] = [];
   deck: Card[] = [];
   state: GameState = GameState.Bet;
-  changeState(): void {
-    const newState = stateTransitions[this.state]();
+  changeState(payload?: any): void {
+    const newState = stateTransitions[this.state](payload);
 
     effectsMap
       .filter(
@@ -85,7 +85,7 @@ export class GameStore {
   }
 
   onHit() {
-    this.changeState();
+    this.changeState({ buttonType: "Hit" });
   }
 
   onBet() {}
@@ -97,6 +97,7 @@ export class GameStore {
     makeAutoObservable(this);
   }
 }
+
 export const countScore = (cards: Card[]) => {
   return cards.reduce<number>((sum, current) => {
     sum += cardCosts[current.rank];

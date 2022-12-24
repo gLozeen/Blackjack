@@ -5,13 +5,25 @@ let callBackIds = [];
 export enum GameState {
   Bet = "bet",
   Setup = "setup",
+  PlayTime = "playTime",
+  EndGame = "endGame",
 }
 
-type GameStateTransition = Record<GameState, () => GameState>;
+type GameStateTransition = Record<GameState, (payload?: any) => GameState>;
 
 export const stateTransitions: GameStateTransition = {
   [GameState.Bet]: () => GameState.Setup,
-  [GameState.Setup]: () => GameState.Setup,
+  [GameState.Setup]: () => GameState.PlayTime,
+  [GameState.PlayTime]: (payload: { buttonType: string }) => {
+    if (payload.buttonType === "Hit") {
+      return GameState.PlayTime;
+    } else {
+      return GameState.EndGame;
+    }
+  },
+  [GameState.EndGame]: function (): GameState {
+    throw new Error("Function not implemented.");
+  },
 };
 
 type GameStateEffect = {
@@ -22,7 +34,7 @@ type GameStateEffect = {
 
 export const effectsMap: GameStateEffect[] = [];
 
-type GameStateHandler = Record<GameState, () => void>;
+type GameStateHandler = Record<GameState, (payload?: any) => void>;
 
 export const stateHandlers: GameStateHandler = {
   [GameState.Bet]: () => {
@@ -34,5 +46,11 @@ export const stateHandlers: GameStateHandler = {
     gameStore.dealToDealer();
     gameStore.dealToPlayer();
     gameStore.dealToPlayer();
+  },
+  [GameState.PlayTime]: () => {
+    gameStore.dealToPlayer();
+  },
+  [GameState.EndGame]: () => {
+    throw new Error("Function not implemented.");
   },
 };
