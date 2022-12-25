@@ -3,7 +3,7 @@ import { StyledStandButton } from "./button.styled";
 import { ActionButtonProps } from "./button.types";
 
 export const StandButton = observer((props: ActionButtonProps) => (
-  <StyledStandButton {...props}>
+  <StyledStandButton data-disabled={props.disabled} {...props}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
