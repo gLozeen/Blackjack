@@ -1,5 +1,4 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import { makeAutoObservable } from "mobx";
 import { observer } from "mobx-react";
@@ -8,7 +7,6 @@ import { Buttons } from "./components/buttons/button.styled";
 import { BetButton } from "./components/buttons/bet";
 import { HitButton } from "./components/buttons/hit";
 import { StandButton } from "./components/buttons/stand";
-import { SurrenderButton } from "./components/buttons/surrender";
 import { GameStore } from "./lib/gameStore";
 import { CardComponent, CardBack } from "./components/card/cardComponent";
 import { DealerScore } from "./components/dealerScore";
