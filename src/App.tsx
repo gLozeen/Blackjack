@@ -22,15 +22,15 @@ const App = observer(() => {
   return (
     <>
       <Buttons>
-        <HitButton
-          onClick={() => gameStore.onHit()}
-          disabled={gameStore.state !== GameState.PlayerTurn}
-        />
-        <BetButton onClick={() => gameStore.onBet()} />
-        <StandButton
-          onClick={() => gameStore.onStand()}
-          disabled={gameStore.state !== GameState.PlayerTurn}
-        />
+        {gameStore.state === GameState.PlayerTurn && (
+          <HitButton onClick={() => gameStore.onHit()} />
+        )}
+        {gameStore.state === GameState.Bet && (
+          <BetButton onClick={() => gameStore.onBet()} />
+        )}
+        {gameStore.state === GameState.PlayerTurn && (
+          <StandButton onClick={() => gameStore.onStand()} />
+        )}
       </Buttons>
       <div className="table-wrapper">
         <div className="table">
