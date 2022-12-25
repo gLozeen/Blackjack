@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 
 export const ActionButton = styled.div`
-  font-family: "Ponjoung", sans-serif;
   font-weight: bold;
   user-select: none;
   height: 45px;

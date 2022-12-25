@@ -10,7 +10,7 @@ import { HitButton } from "./components/buttons/hit";
 import { StandButton } from "./components/buttons/stand";
 import { SurrenderButton } from "./components/buttons/surrender";
 import { GameStore } from "./lib/gameStore";
-import { CardComponent, CardFliped } from "./components/card/cardComponent";
+import { CardComponent, CardBack } from "./components/card/cardComponent";
 import { DealerScore } from "./components/dealerScore";
 import { GameState } from "./lib/stateMap.types";
 
@@ -42,7 +42,7 @@ const App = observer(() => {
                 gameStore.state === GameState.Bet ? (
                   <CardComponent card={card} key={`card${cardIndex}`} />
                 ) : (
-                  <CardFliped key={`card${cardIndex}`} />
+                  <CardBack key={`card${cardIndex}`} />
                 )
               )}
             </div>

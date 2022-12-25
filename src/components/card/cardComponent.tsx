@@ -5,10 +5,20 @@ interface CardComponentProps {
   card: Card;
   key: string;
 }
-export const CardFliped = styled.div`
+
+export const CardFace = styled.div`
   position: relative;
-  width: 27px;
-  height: 38px;
+  width: 37px;
+  height: 48px;
+  background: #464e87;
+  border-radius: 5px;
+  animation: append-animate 0.3s linear;
+`;
+
+export const CardBack = styled.div`
+  position: relative;
+  width: 37px;
+  height: 48px;
   background: #22294d;
   border-radius: 5px;
   animation: append-animate 0.3s linear;
@@ -16,7 +26,7 @@ export const CardFliped = styled.div`
 export const CardComponent: React.FC<CardComponentProps> = (
   props: CardComponentProps
 ) => (
-  <div className="card">
+  <CardFace>
     <div className="rank">{props.card.rank}</div>
     <div
       className="suit"
@@ -29,5 +39,5 @@ export const CardComponent: React.FC<CardComponentProps> = (
     >
       {getDisplaySuit(props.card.suit)}
     </div>
-  </div>
+  </CardFace>
 );

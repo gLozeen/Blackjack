@@ -2,6 +2,7 @@
 * {
   box-sizing: border-box;
   user-select: none;
+  font-family: "Ponjoung", sans-serif;
 }
 
 @keyframes append-animate {
@@ -64,29 +65,22 @@ body {
   );
   border-radius: 145px;
 }
-.card {
-  position: relative;
-  width: 27px;
-  height: 38px;
-  background: #464e87;
-  border-radius: 5px;
-  animation: append-animate 0.3s linear;
-}
 .suit {
   position: absolute;
   bottom: 4px;
-  right: 4px;
-  font-size: 18px;
+  right: 6px;
+  font-size: 19px;
   line-height: 15px;
 }
 .rank {
   position: absolute;
   color: white;
   font-family: "Ponjoung", sans-serif;
-  top: 4px;
-  left: 4px;
-  font-size: 14px;
-  line-height: 15px;
+  top: 6px;
+  left: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 14px;
 }
 .dealer-hand {
   position: absolute;
@@ -94,14 +88,14 @@ body {
   left: 50%;
   justify-content: center;
   width: 40%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(1.25);
   display: flex;
   flex-flow: row wrap;
   gap: 5px;
 }
 .hand {
   position: absolute;
-  bottom: 24px;
+  bottom: 20%;
   left: 50%;
   transform: translate(-50%, 0);
   display: flex;
@@ -110,10 +104,11 @@ body {
 }
 .bet {
   width: 40px;
-  height: 16px;
+  height: 18px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 112px;
-  font-size: 12px;
+  font-weight: 700;
+  font-size: 14px;
   color: white;
   font-family: "Ponjoung", sans-serif;
   text-align: center;
@@ -121,7 +116,7 @@ body {
 }
 .player-bet {
   position: absolute;
-  bottom: 120px;
+  bottom: 15%;
   left: 50%;
   transform: translate(-50%, 0);
 }
