@@ -108,6 +108,17 @@ export class GameStore {
   }
 
   gameEnd(dealerCards: Card[], playerCards: Card[]) {
+    if (this.countScore(this.dealerHand) > 21) {
+      toast("You won!", {
+        icon: "💲",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      return;
+    }
     if (this.countScore(this.playerHand) > 21) {
       toast("You lose!", {
         icon: "❌",
