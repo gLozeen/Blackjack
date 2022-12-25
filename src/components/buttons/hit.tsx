@@ -1,4 +1,5 @@
 import { observer } from "mobx-react";
+import React from "react";
 import { StyledHitButton } from "./button.styled";
 import { ActionButtonProps } from "./button.types";
 
