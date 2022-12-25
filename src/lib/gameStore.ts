@@ -161,7 +161,7 @@ export class GameStore {
     }
     return count;
   };
-  // "8","2","2","A"
+
   shouldTakeCard = () => this.countScore(this.dealerHand) < 17;
   constructor() {
     makeAutoObservable(this);

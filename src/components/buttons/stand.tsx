@@ -1,9 +1,9 @@
 import { observer } from "mobx-react";
-import { ActionButton } from "./button.styled";
+import { StyledStandButton } from "./button.styled";
 import { ActionButtonProps } from "./button.types";
 
 export const StandButton = observer((props: ActionButtonProps) => (
-  <ActionButton {...props}>
+  <StyledStandButton {...props}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -18,5 +18,5 @@ export const StandButton = observer((props: ActionButtonProps) => (
         d="M4.5 12.75l6 6 9-13.5"
       />
     </svg>
-  </ActionButton>
+  </StyledStandButton>
 ));

@@ -32,8 +32,9 @@ body {
   position: relative;
   width: 80%;
   aspect-ratio: 1/2;
+  max-width: 350px;
   background: #2b3058;
-  border-radius: 145px;
+  border-radius: 165px;
   box-shadow: 16px 16px 20px rgba(0, 0, 0, 0.25);
   padding: 20px;
 }
@@ -42,7 +43,7 @@ body {
   position: absolute;
   inset: 0;
   padding: 2px;
-  border-radius: 145px;
+  border-radius: 165px;
   background: linear-gradient(180deg, #212544 0%, #353a66 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
