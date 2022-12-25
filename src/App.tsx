@@ -31,7 +31,6 @@ const App = observer(() => {
           onClick={() => gameStore.onStand()}
           disabled={gameStore.state !== GameState.PlayerTurn}
         />
-        {/* <SurrenderButton onClick={() => gameStore.onSurrender()} /> */}
       </Buttons>
       <div className="table-wrapper">
         <div className="table">

@@ -167,6 +167,7 @@ export class GameStore {
     makeAutoObservable(this);
   }
 }
+
 export const getDisplaySuit = (suit: Suit): string => {
   switch (suit) {
     case "spades":
